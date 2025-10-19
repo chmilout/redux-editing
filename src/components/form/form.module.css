@@ -1,0 +1,27 @@
+.form {
+  display: flex;
+  gap: 12px;
+  align-items: flex-end;
+}
+
+.input-group {
+  display: flex;
+  flex-direction: column;
+}
+
+.input {
+  box-sizing: border-box;
+  height: 42px;
+  padding: 10px 12px;
+}
+
+.input[type='number']::-webkit-outer-spin-button,
+.input[type='number']::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+}
+
+.form-btn {
+  box-sizing: border-box;
+  height: 42px;
+  padding: 10px 12px;
+}
