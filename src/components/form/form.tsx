@@ -3,11 +3,11 @@ import cn from './form.module.css';
 
 export const Form: FC<{
   onSubmit: (e: FormEvent<HTMLFormElement>) => void;
-  formKey: number;
+  onCancel: () => void;
   editing: boolean;
-}> = ({ onSubmit, formKey, editing }) => {
+}> = ({ onSubmit, onCancel, editing }) => {
   return (
-    <form onSubmit={onSubmit} key={formKey} className={cn['form']}>
+    <form onSubmit={onSubmit} className={cn['form']}>
       <div className={cn['input-group']}>
         <label>Введите название</label>
         <input className={cn['input']} type="text" name="name" placeholder="Введите название" />
@@ -18,7 +18,7 @@ export const Form: FC<{
       </div>
       <div>
         <button className={cn['form-btn']} type="submit">Save</button>
-        {editing && <button className={cn['form-btn']}>Cancel</button>}
+        {editing && <button className={cn['form-btn']} onClick={onCancel}>Cancel</button>}
       </div>
     </form>
   );
