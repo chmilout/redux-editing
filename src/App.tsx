@@ -1,45 +1,51 @@
-import { useState, type FormEvent, type FC } from 'react';
+import { type FormEvent, type FC } from 'react';
 import { nanoid } from 'nanoid';
+import { useDispatch } from 'react-redux';
 import { Form } from './components/form';
 import { List } from './components/list';
+import {
+  addService,
+  updateService,
+  deleteService,
+  setEditingId,
+  cancelEditing,
+} from './redux/actions';
+import { useAppSelector } from './redux/hooks';
 import { type TFormData } from './components/types';
 import './App.css';
 
 export const App: FC = () => {
-  const [inputsData, setInputsData] = useState<TFormData[]>([]);
-  const [formKey, setFormKey] = useState(0);
-  const [editingId, setEditingId] = useState<string | null>(null);
+  const { items, editingId } = useAppSelector((state) => state.services);
+  const dispatch = useDispatch();
 
   const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     const form = e.target as HTMLFormElement;
     const formData = new FormData(form);
     const data = Object.fromEntries(formData);
-    const processedData: TFormData = {
-      id: nanoid(),
+    const processedData = {
       name: String(data.name) || '',
       price: Number(data.price) || 0,
     };
     if (editingId) {
-      setInputsData((prev) => {
-        return prev.map((item) =>
-          item.id === editingId
-            ? {
-                ...item,
-                name: String(data.name) || '',
-                price: Number(data.price) || 0,
-              }
-            : item
-        );
-      });
-      setEditingId(null);
+      dispatch(updateService(editingId, processedData));
     } else {
-      setInputsData((prev) => [...prev, processedData]);
+      const newItem = {
+        id: nanoid(),
+        ...processedData,
+      };
+      dispatch(addService(newItem));
     }
-    setFormKey((prev) => prev + 1);
+    form.reset();
   };
 
-  const fillFormForEditing = (item: TFormData) => {
+  const handleDelete = (id: string) => {
+    dispatch(deleteService(id));
+  };
+
+  const handleEdit = (item: TFormData) => {
+    dispatch(setEditingId(item.id));
+
     const nameInput = document.querySelector(
       'input[name="name"]'
     ) as HTMLInputElement;
@@ -51,23 +57,27 @@ export const App: FC = () => {
       nameInput.value = item.name;
       priceInput.value = item.price.toString();
     }
-    setEditingId(item.id);
   };
 
-  const handleDelete = (id: string) => {
-    setInputsData((prev) => prev.filter((item) => item.id !== id));
-  };
+  const handleCancel = () => {
+    dispatch(cancelEditing());
 
-  const handleEdit = (item: TFormData) => {
-    fillFormForEditing(item);
+    const form = document.querySelector('form');
+    if (form) {
+      form.reset();
+    }
   };
 
   return (
     <div className="wrapper">
       <div className="container">
-        <Form onSubmit={handleSubmit} formKey={formKey} editing={!!editingId} />
+        <Form
+          onSubmit={handleSubmit}
+          onCancel={handleCancel}
+          editing={!!editingId}
+        />
         <List
-          list={inputsData}
+          list={items}
           onDelete={handleDelete}
           onEdit={handleEdit}
           editingId={editingId}
