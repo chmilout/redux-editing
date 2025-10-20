@@ -5,6 +5,7 @@ import {
   DELETE_SERVICE,
   SET_EDITING_ID,
   CANCEL_EDITING,
+  SET_FILTER,
 } from './action-types';
 
 export type AddServiceAction = {
@@ -34,12 +35,18 @@ export type CancelEditingAction = {
   type: typeof CANCEL_EDITING;
 };
 
+export type SetFilterAction = {
+  type: typeof SET_FILTER;
+  payload: string;
+};
+
 export type ServiceActionTypes =
   | AddServiceAction
   | UpdateServiceAction
   | DeleteServiceAction
   | SetEditingIdAction
-  | CancelEditingAction;
+  | CancelEditingAction
+  | SetFilterAction;
 
 export const addService = (item: TFormData) => ({
   type: ADD_SERVICE,
@@ -63,4 +70,9 @@ export const setEditingId = (id: string | null) => ({
 
 export const cancelEditing = () => ({
   type: CANCEL_EDITING,
+});
+
+export const setFilter = (filter: string) => ({
+  type: SET_FILTER,
+  payload: filter,
 });

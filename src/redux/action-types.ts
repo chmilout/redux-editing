@@ -3,3 +3,4 @@ export const UPDATE_SERVICE = 'UPDATE_SERVICE';
 export const DELETE_SERVICE = 'DELETE_SERVICE';
 export const SET_EDITING_ID = 'SET_EDITING_ID';
 export const CANCEL_EDITING = 'CANCEL_EDITING';
+export const SET_FILTER = 'SET_FILTER';

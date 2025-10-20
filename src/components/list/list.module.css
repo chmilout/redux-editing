@@ -4,3 +4,10 @@
   flex-direction: column;
   gap: 10px;
 }
+
+.empty {
+  text-align: center;
+  padding: 20px;
+  color: #666;
+  font-style: italic;
+}

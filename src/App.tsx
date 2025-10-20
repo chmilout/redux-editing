@@ -1,22 +1,36 @@
-import { type FormEvent, type FC } from 'react';
+import { type FormEvent, type FC, useMemo } from 'react';
 import { nanoid } from 'nanoid';
 import { useDispatch } from 'react-redux';
 import { Form } from './components/form';
 import { List } from './components/list';
+import { Filter } from './components/filter';
 import {
   addService,
   updateService,
   deleteService,
   setEditingId,
   cancelEditing,
+  setFilter,
 } from './redux/actions';
 import { useAppSelector } from './redux/hooks';
 import { type TFormData } from './components/types';
 import './App.css';
 
 export const App: FC = () => {
-  const { items, editingId } = useAppSelector((state) => state.services);
+  const { items, editingId, filter } = useAppSelector(
+    (state) => state.services
+  );
   const dispatch = useDispatch();
+
+  const filteredItems = useMemo(() => {
+    if (!filter) {
+      return items;
+    }
+    const lowerCaseFilter = filter.toLowerCase();
+    return items.filter((item) =>
+      item.name.toLowerCase().includes(lowerCaseFilter)
+    );
+  }, [items, filter]);
 
   const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -68,6 +82,10 @@ export const App: FC = () => {
     }
   };
 
+  const handleFilterChange = (newFilter: string) => {
+    dispatch(setFilter(newFilter));
+  };
+
   return (
     <div className="wrapper">
       <div className="container">
@@ -76,8 +94,9 @@ export const App: FC = () => {
           onCancel={handleCancel}
           editing={!!editingId}
         />
+        <Filter value={filter} onChange={handleFilterChange} />
         <List
-          list={items}
+          list={filteredItems}
           onDelete={handleDelete}
           onEdit={handleEdit}
           editingId={editingId}

@@ -10,15 +10,21 @@ export const List: FC<{
   editingId: string | null;
 }> = ({ list, editingId, ...rest }) => {
   return (
-    <ul className={cn['list']}>
-      {list.map((item) => (
-        <ListItem
-          item={item}
-          disabled={editingId === item.id}
-          key={item.id}
-          {...rest}
-        />
-      ))}
-    </ul>
+    <>
+      {list.length === 0 ? (
+        <div className={cn['empty']}>Нет элементов для отображения</div>
+      ) : (
+        <ul className={cn['list']}>
+          {list.map((item) => (
+            <ListItem
+              item={item}
+              disabled={editingId === item.id}
+              key={item.id}
+              {...rest}
+            />
+          ))}
+        </ul>
+      )}
+    </>
   );
 };
